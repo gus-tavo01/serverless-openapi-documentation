@@ -14,10 +14,9 @@ function updateReferences(schema: JSONSchema7): JSONSchema7 {
   const cloned = _.cloneDeep(schema);
 
   if (cloned.$ref) {
-    // console.log(cloned.$ref.replace('{{model: (\w+)}}', 'toto'))
     let referencedValue = cloned.$ref
-      .replace("#/definitions", "#/components/schemas")
-      .replace(/{{model: (\w+)}}/, "#/components/schemas/$1");
+      .replace("#/definitions", "#/components/schemas") // json schema syntax
+      .replace(/{{model: (\w+)}}/, "#/components/schemas/$1"); // swagger 2.0 syntax
     return {
       ...cloned,
       $ref: referencedValue
