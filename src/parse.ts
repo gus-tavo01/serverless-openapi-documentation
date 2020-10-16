@@ -14,9 +14,13 @@ function updateReferences(schema: JSONSchema7): JSONSchema7 {
   const cloned = _.cloneDeep(schema);
 
   if (cloned.$ref) {
+    // console.log(cloned.$ref.replace('{{model: (\w+)}}', 'toto'))
+    let referencedValue = cloned.$ref
+      .replace("#/definitions", "#/components/schemas")
+      .replace(/{{model: (\w+)}}/, "#/components/schemas/$1");
     return {
       ...cloned,
-      $ref: cloned.$ref.replace("#/definitions", "#/components/schemas")
+      $ref: referencedValue
     };
   }
 
