@@ -37,8 +37,28 @@ describe("OpenAPI Documentation Generator", () => {
     }
   });
 
+  it('should allow path to be preceded with a slash without duplicating the slash', async () => {
+    const docGen = new DefinitionGenerator(
+      sls.service.custom.documentation,
+      servicePath
+    );
 
-  it("resolves the DTOs recursively using the swagger 2.0 spec : $ref: {{model: OtherDTO}}", async () => {
+    // implementation copied from ServerlessOpenApiDocumentation.ts
+    await docGen.parse();
+
+    const funcConfigs = sls.service.getAllFunctions().map(functionName => {
+      const func = sls.service.getFunction(functionName);
+      return _.merge({ _functionName: functionName }, func);
+    });
+
+    docGen.readFunctions(funcConfigs);
+
+    let expected = [ "/api/company-service/companies", "/api/company-service/companies/"];
+    expect(Object.keys(docGen.definition.paths)).toEqual(expected)
+  });
+
+
+  it("parses the requestModels", async () => {
     const docGen = new DefinitionGenerator(
       sls.service.custom.documentation,
       servicePath
@@ -56,49 +76,37 @@ describe("OpenAPI Documentation Generator", () => {
 
 
     let expected = {
-      "CompaniesDTO": {
-        "properties": {
-          "companies": {
-            "items": {
-              "$ref": "#/components/schemas/CompanyDTO"
+      get: {
+        operationId: "company-getall",
+        parameters: [
+          {
+            description: "Authentication tokens",
+            in: "header",
+            name: "X-AccessToken",
+            required: false,
+            schema: {
+              type: "string"
+            }
+          }
+        ],
+        responses: {
+          200: {
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/CompaniesDTO"
+                }
+              }
             },
-            "type": "array"
+            description: "Status 200 Response"
           }
         },
-        "type": "object"
-      },
-      "CompanyDTO": {
-        "properties": {
-          "client": {
-            "$ref": "#/components/schemas/UserDTO"
-          },
-          "name": {
-            "type": "string"
-          },
-          "notes": {
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "UserDTO": {
-        "properties": {
-          "companyName": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "surname": {
-            "type": "string"
-          }
-        },
-        "type": "object"
+        summary: "Get all companies",
+        tags: [
+          "CompanyAPI"
+        ]
       }
     };
-    expect(docGen.definition.components.schemas).toEqual(expected)
+    expect(docGen.definition.paths['/api/company-service/companies']).toEqual(expected)
   });
 });
