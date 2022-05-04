@@ -61,12 +61,12 @@ export class DefinitionGenerator {
       this.definition.servers = servers;
     }
 
-    this.definition.components.schemas = await parseModels(models, this.root);
-    this.config.models = _.map(this.definition.components.schemas, createModel);
-
     function createModel(value, key): Model {
       return {name: key, contentType: 'application/json', schema: value};
     }
+
+    this.definition.components.schemas = await parseModels(models, this.root);
+    this.config.models = _.map(this.definition.components.schemas, createModel);
 
     return this;
   }
