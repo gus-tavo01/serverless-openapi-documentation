@@ -94,22 +94,20 @@ export class DefinitionGenerator {
    */
   public readFunctions(config: Array<ServerlessFunctionConfig>): void {
     function normalizePath(path: string) {
-      return path.startsWith('/')? path : '/'+path;
+      return path.startsWith('/') ? path : `/${path}`;
     }
 
-// loop through function configurations
+    // loop through function configurations
     for (const funcConfig of config) {
       // loop through http events
       for (const httpEvent of this.getHttpEvents(funcConfig.events || [])) {
-        const httpEventConfig = httpEvent.http;
-
-        if (httpEventConfig.documentation) {
+        if (httpEvent.documentation) {
           // Build OpenAPI path configuration structure for each method
           const pathConfig = {
-            [normalizePath(httpEventConfig.path)]: {
-              [httpEventConfig.method.toLowerCase()]: this.getOperationFromConfig(
+            [normalizePath(httpEvent.path)]: {
+              [httpEvent.method.toLowerCase()]: this.getOperationFromConfig(
                 funcConfig._functionName,
-                httpEventConfig.documentation
+                httpEvent.documentation
               )
             }
           };
@@ -379,7 +377,13 @@ export class DefinitionGenerator {
     return content;
   }
 
-  private getHttpEvents(funcConfig) {
-    return funcConfig.filter(event => (event.http ? true : false));
+  private getHttpEvents(funcEvents: Array<any>) {
+    const httpEvents = funcEvents.filter((event) => event.http || event.httpApi)
+    .map((event) => {
+      if (event.http?.documentation) return event.http;
+      if(event.httpApi?.documentation) return event.httpApi;
+      return {};
+    });
+    return httpEvents;
   }
 }
