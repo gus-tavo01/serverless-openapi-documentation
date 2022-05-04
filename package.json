@@ -1,5 +1,5 @@
 {
-  "name": "@gus-tavo01/serverless-openapi-documentation",
+  "name": "serverless-openapi-documentation-v3",
   "version": "1.1.0",
   "description": "Serverless plugin to generate OpenAPI V3 documentation from serverless configuration",
   "main": "index.js",
