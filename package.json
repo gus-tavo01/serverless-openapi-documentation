@@ -25,7 +25,6 @@
     "test:coverage": "jest -c ./jest.config.js --coverage",
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "npm run lint -- --fix",
-    "preversion": "npm run lint && npm run build && npm run test:build && changelog-verify CHANGELOG.md",
     "release": "cd build && npm publish",
     "test:project": "cd test/project && ./node_modules/.bin/sls openapi generate",
     "test:prepare": "scripts/prepareTests.bash",
