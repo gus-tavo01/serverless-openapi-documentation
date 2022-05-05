@@ -25,13 +25,14 @@
     "test:coverage": "jest -c ./jest.config.js --coverage",
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "npm run lint -- --fix",
+    "preversion": "npm run lint && npm run build && npm run test:build && changelog-verify CHANGELOG.md",
+    "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
     "release": "cd build && npm publish",
     "test:project": "cd test/project && ./node_modules/.bin/sls openapi generate",
     "test:prepare": "scripts/prepareTests.bash",
     "build:link": "npm run build && cd build && npm link",
     "build:watch": "npm run build && tsc --watch",
-    "build": "scripts/build.bash",
-    "tsbuild": "tsc"
+    "build": "scripts/build.bash"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
