@@ -29,10 +29,10 @@
     "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
     "release": "cd build && npm publish",
     "test:project": "cd test/project && ./node_modules/.bin/sls openapi generate",
-    "test:prepare": "scripts/prepareTests.bash",
+    "test:prepare": "bash scripts/prepareTests.sh",
     "build:link": "npm run build && cd build && npm link",
     "build:watch": "npm run build && tsc --watch",
-    "build": "scripts/build.bash"
+    "build": "bash scripts/build.sh"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
