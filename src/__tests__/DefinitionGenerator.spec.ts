@@ -111,7 +111,7 @@ describe("OpenAPI Documentation Generator", () => {
 
     const funcConfigs = sls.service.getAllFunctions().map(functionName => {
       const func = sls.service.getFunction(functionName);
-      return _.merge({_functionName: functionName}, func);
+      return _.merge({ _functionName: functionName }, func);
     });
 
     docGen.readFunctions(funcConfigs);
@@ -121,17 +121,15 @@ describe("OpenAPI Documentation Generator", () => {
       docGen.definition.paths["/create/{username}"].post.requestBody;
     const expected = {
       content: {
-        'application/json': {
-            schema: {
-                '$ref':
-                  '#/components/schemas/PutDocumentRequest'
-              }
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/PutDocumentRequest"
           }
+        }
       },
       description: "A user information object"
     };
 
-      expect(actual).toEqual(expected);
-    }
-  )
+    expect(actual).toEqual(expected);
+  });
 });

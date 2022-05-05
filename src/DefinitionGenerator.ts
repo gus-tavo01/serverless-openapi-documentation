@@ -4,7 +4,14 @@ import { validateSync as openApiValidatorSync } from "swagger2openapi/validate";
 import * as uuid from "uuid";
 
 import { parseModels } from "./parse";
-import { Definition, DefinitionConfig, Model, Operation, ParameterConfig, ServerlessFunctionConfig } from "./types";
+import {
+  Definition,
+  DefinitionConfig,
+  Model,
+  Operation,
+  ParameterConfig,
+  ServerlessFunctionConfig
+} from "./types";
 import { cleanSchema } from "./utils";
 
 export class DefinitionGenerator {
@@ -62,7 +69,7 @@ export class DefinitionGenerator {
     }
 
     function createModel(value, key): Model {
-      return {name: key, contentType: 'application/json', schema: value};
+      return { name: key, contentType: "application/json", schema: value };
     }
 
     this.definition.components.schemas = await parseModels(models, this.root);
@@ -94,7 +101,7 @@ export class DefinitionGenerator {
    */
   public readFunctions(config: Array<ServerlessFunctionConfig>): void {
     function normalizePath(path: string) {
-      return path.startsWith('/') ? path : `/${path}`;
+      return path.startsWith("/") ? path : `/${path}`;
     }
 
     // loop through function configurations
@@ -256,7 +263,7 @@ export class DefinitionGenerator {
     }
 
     // Does this event have a request model?
-    if (documentationConfig.requestModels) { // TODO remove this if statement
+    if (documentationConfig.requestModels) {
       // For each request model type (Sorted by "Content-Type")
       for (const requestModelType of Object.keys(
         documentationConfig.requestModels
@@ -353,7 +360,7 @@ export class DefinitionGenerator {
     return responses;
   }
 
-  private getResponseContent(response ={}) {
+  private getResponseContent(response = {}) {
     const content = {};
 
     for (const responseKey of Object.keys(response)) {
@@ -378,12 +385,18 @@ export class DefinitionGenerator {
   }
 
   private getHttpEvents(funcEvents: Array<any>) {
-    const httpEvents = funcEvents.filter((event) => event.http || event.httpApi)
-    .map((event) => {
-      if (event.http?.documentation) return event.http;
-      if(event.httpApi?.documentation) return event.httpApi;
-      return {};
-    });
+    const httpEvents = funcEvents
+      .filter(event => event.http || event.httpApi)
+      .map(event => {
+        if (event.http) {
+          if (event.http.documentation) return event.http;
+        }
+
+        if (event.httpApi) {
+          if (event.httpApi.documentation) return event.httpApi;
+        }
+        return {};
+      });
     return httpEvents;
   }
 }

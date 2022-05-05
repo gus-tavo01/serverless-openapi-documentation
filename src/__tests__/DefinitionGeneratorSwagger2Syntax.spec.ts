@@ -37,7 +37,7 @@ describe("OpenAPI Documentation Generator", () => {
     }
   });
 
-  it('should allow path to be preceded with a slash without duplicating the slash', async () => {
+  it("should allow path to be preceded with a slash without duplicating the slash", async () => {
     const docGen = new DefinitionGenerator(
       sls.service.custom.documentation,
       servicePath
@@ -53,10 +53,12 @@ describe("OpenAPI Documentation Generator", () => {
 
     docGen.readFunctions(funcConfigs);
 
-    let expected = [ "/api/company-service/companies", "/api/company-service/companies/"];
-    expect(Object.keys(docGen.definition.paths)).toEqual(expected)
+    let expected = [
+      "/api/company-service/companies",
+      "/api/company-service/companies/"
+    ];
+    expect(Object.keys(docGen.definition.paths)).toEqual(expected);
   });
-
 
   it("parses the requestModels", async () => {
     const docGen = new DefinitionGenerator(
@@ -73,7 +75,6 @@ describe("OpenAPI Documentation Generator", () => {
     });
 
     docGen.readFunctions(funcConfigs);
-
 
     let expected = {
       get: {
@@ -102,11 +103,11 @@ describe("OpenAPI Documentation Generator", () => {
           }
         },
         summary: "Get all companies",
-        tags: [
-          "CompanyAPI"
-        ]
+        tags: ["CompanyAPI"]
       }
     };
-    expect(docGen.definition.paths['/api/company-service/companies']).toEqual(expected)
+    expect(docGen.definition.paths["/api/company-service/companies"]).toEqual(
+      expected
+    );
   });
 });
