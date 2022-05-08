@@ -163,7 +163,9 @@ export class DefinitionGenerator {
       );
     }
 
-    // if (documentationConfig.security) { operationObj.security = documentationConfig.security; }
+    if (documentationConfig.security) {
+      operationObj.security = documentationConfig.security;
+    }
 
     operationObj.parameters = this.getParametersFromConfig(documentationConfig);
     operationObj.responses = this.getResponsesFromConfig(documentationConfig);
